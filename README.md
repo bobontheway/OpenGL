@@ -1,2 +1,2 @@
 # OpenGL
-opengl project
+opengl project for some example
