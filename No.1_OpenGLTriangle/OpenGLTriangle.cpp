@@ -31,7 +31,7 @@ static void dumpGLInfo(void)
 	printGLString("Version", GL_VERSION);
 	printGLString("Vendor", GL_VENDOR);
 	printGLString("Renderer", GL_RENDERER);
-	printGLString("Extensions", GL_EXTENSIONS);
+	//printGLString("Extensions", GL_EXTENSIONS);
 }
 
 //EGLNativeWindowType initSurface(void)
@@ -39,8 +39,6 @@ static void initSurface(void)
 {
 	EGLBoolean ret;
 	status_t err;
-
-	printf("====> initSurface\n");
 
 	sp<SurfaceComposerClient> client = new SurfaceComposerClient;
 	err = client->initCheck();
@@ -152,9 +150,6 @@ static void initSurface(void)
 		fprintf(stderr, "eglMakeCurrent failed.\n");
 		return;
 	}
-
-	printf("<==== initSurface\n");
-	//return (EGLNativeWindowType)window.get();
 }
 
 //int main(int argc, char** argv)
