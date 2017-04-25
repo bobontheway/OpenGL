@@ -1,0 +1,35 @@
+logcat
+================================
+
+BufferQueue has been abandoned?
+http://stackoverflow.com/questions/22486762/what-can-i-do-when-the-bufferqueue-has-been-abandoned
+================================
+
+====> int main() after setupGraphics
+gl Version(0x1f02) = OpenGL ES 3.1
+v1.r8p0-01dev0.aa829512e3c4ac5a9261cd1b826d668c
+gl Vendor(0x1f00) = ARM
+gl Renderer(0x1f01) = Mali-T880
+display=0x1  surface=0xa01a77c0
+after glClear() glError 0x505
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+after eglSwapBuffers() eglError 0x300d
+
