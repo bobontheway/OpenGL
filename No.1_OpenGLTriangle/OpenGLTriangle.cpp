@@ -271,8 +271,7 @@ void renderFrame(void)
 {
 	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 	checkGLError("glClearColor");
-	//glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	checkGLError("glClear");
 
 	glUseProgram(gProgram);
