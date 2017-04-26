@@ -84,7 +84,6 @@ static void dumpGLInfo(void)
 	//printGLString("Extensions", GL_EXTENSIONS);
 }
 
-//EGLNativeWindowType initSurface(void)
 static void initSurface(EGLint &w, EGLint &h, EGLDisplay &dinfo, EGLSurface &surface)
 {
 	EGLBoolean ret;
@@ -119,8 +118,6 @@ static void initSurface(EGLint &w, EGLint &h, EGLDisplay &dinfo, EGLSurface &sur
 		height = mainDisplayInfo.h;
 	}
 
-	printf("======> %s mWidth=%u mHeight=%u\n", __func__, mainDisplayInfo.h, mainDisplayInfo.w);
-
 	sp<SurfaceControl> sc = client->createSurface(String8("Triangle"), width,
 		height, PIXEL_FORMAT_RGBX_8888, ISurfaceComposerClient::eOpaque);
 	if (sc == NULL || !sc->isValid()) {
@@ -142,7 +139,6 @@ static void initSurface(EGLint &w, EGLint &h, EGLDisplay &dinfo, EGLSurface &sur
 	}
 	SurfaceComposerClient::closeGlobalTransaction();
 
-	// xbdong
 	sp<Surface> s = sc->getSurface();
 
 	EGLConfig config = {0};
@@ -417,22 +413,16 @@ int main(void)
 	printf("====> %s ====[w=%d h=%d]====\n", __func__, width, height);
 
 	setupGraphics(width, height);
-
-	printf("====> %s after setupGraphics\n", __func__);
-
 	dumpGLInfo();
 
 	printf("display=0x%x  surface=0x%x\n", dinfo, surface);
 
 	for (;;) {
-	//for (int i = 0; i < 20; i++) {
 		renderFrame();
 		eglSwapBuffers(dinfo, surface);
 		checkEglError("eglSwapBuffers");
 	}
 
-
-	printf("====> %s ====[3]====\n", __func__);
 	return 0;
 }
 
