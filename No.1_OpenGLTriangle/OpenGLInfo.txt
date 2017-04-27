@@ -28,3 +28,67 @@ API 创建图形上下文的机制；并且可以同步客户端 API 的绘制�
 所有的 EGL 对象和 EGLDisplay 关联，并存在于该显示器定义的命名空间中。对象指
 定时，包含了一个 ELGDisplay 参数，和一个表示对象句柄的参数。
 
+4.什么是渲染上下文，怎么绘制界面？
+只要满足兼容性约束和地址空间的要求，客户端可以使用不同的渲染上下文渲染到同一
+个 EGLSurface。它也可以使用单个上下文渲染到多个不同的 EGLSurface。
+
+4.1如何使用渲染上下文
+OpenGL 和 OpenGL ES 都为客户端和服务端分别定义了状态。因此，OpenGL 或
+OpenGL ES 上下文包含有两部分，一个用来保存客户端的状态，另一个用来保存服务端
+的状态。在 Open VG 中并不区分客户端和服务端状态。
+
+OpenGL、OpenGL ES 和 Open VG 客户端 API 包含了一个隐式（implicit）的上下文，
+它用于所有的进入点，这就不需要传递一个显示的上下文参数。每个 API 的隐式上下
+文使用 EGL 调用设置（在 3.7.3 中）。这些 API 使用的隐式上下文称作当前上下文
+（current contexts）。
+
+每个线程对于支持的每个客户端 API，最多可以拥有一个当前的渲染上下文。例如，在
+实现的时候可以同时支持一个 OpenGL ES 上下文和一个 Open VG 上下文对应的 API。
+还有，一个上下文在同一时刻只能属于一个线程。客户（应用程序）负责创建上下文和
+界面。由于 OpenGL 和 OpenGL ES 上下文共享很多的进入点（入口，函数调用？），
+当需要同时支持 OpenGL 和 OpenGL ES 时，在当前的上下文中，这些 客户端 API 需要
+额外的限制。
+
+4.2 渲染模式
+EGL、OpenGL 和 OpenGL ES 支持两种渲染模式：back buffered 和 single buffered。
+
+Back buffered 渲染用于 window 和 pbuffer 界面，渲染时颜色缓冲区使用的内存通
+过 EGL 来分配，并属于 EGL。当客户（client）渲染完成一帧后，back buffer 可能
+被 eglSwapBuffers 拷贝到可见的窗口（window）。Pbuffer 拥有一个 back buffer，
+但是并没有和窗口（window）关联，因此 back buffer 不需要被拷贝。
+
+Single buffered 渲染用于 pixmap 界面。用于颜色缓冲区的内存在界面创建时以 
+native pixmap 的形式指定，客户端 API在渲染的时候请求使用该内存。当客
+户（client）完成一帧的绘制后，native pixmap 包含了最后的图像。pixmap 通常不
+支持多重采用（multisampling），这是由于 native pixmap 作为颜色缓冲区，不可
+能提供空间来存储多重采样（multisample）的信息。
+
+一些客户端 API，例如 OpenGL 和 Open VG 也支持 single buffered 渲染到窗
+口（window）界面。在创建窗口（window）界面的时候可以选择这种行为（在 3.5.1
+中定义）。当混合使用客户端 API 时，不支持 single buffered 渲染到窗
+口（window），例如 OpenGL ES，和客户端 API 支持 single buffered 渲染到
+窗口（window），当绑定窗口界面（window surfaces）到每种 API 类型的上下文时，
+back 颜色缓冲区和可见的窗口内容必须保持一致（3.7.3）。
+
+back 和 single buffered 界面（surfaces）都可以使用 eglCopyBuffers 被拷贝到指
+定的 native pixmap。
+
+4.2.1 本地界面坐标系统
+在大多数的平台上，native windows 和 pixmaps 的坐标系统和 OpenGL、OpenGL ES，
+以及 Open VG 客户端 API 的坐标系统相反。在这样的系统中，native windows 和
+pixmaps 的 （0, 0）坐标在 pixmap 的左上角，客户端 API 的 （0，0）坐标在左下
+角。这样，客户端 API 在渲染到窗口（window）和 pixmap 界面（surface）的时候，
+当访问底层 native window 或 pixmap 的颜色缓冲区时，必须转换它们自己的 y 坐
+标，这样，当最后的图像通过 eglSwapBuffers 显示，或使用本地渲染 API（native 
+rendering）从 pixmap 拷贝到一个可见的窗口，最后的图像如应用程序期望的那样。
+
+4.2.2 窗口大小改变（resize）- 什么是 EGL 窗口（EGL window），什么是本地窗口
+（native window）？什么是客户（client）？
+当它们相应的本地窗口大小改变时，EGL 窗口界面需要重新设置大小。实现通常在
+OS 或平台中使用钩子（hook）来按照要求执行对窗口大小重新设置，这对客户（client）
+是透明的。一些实现也可以通过定义 EGL 扩展，来显式的控制对界面大小的重新设置。
+
+实现如果不能按照要求重新设置 EGL 的窗口界面大小，必须通过使用 eglSwapBuffers
+来响应本地窗口（native window）大小已经改变。（3.10.3）
+
+
