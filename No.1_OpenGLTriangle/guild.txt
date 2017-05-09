@@ -1,0 +1,4 @@
+EGL Guild:
+http://stackoverflow.com/questions/19212145/egl-guide-for-beginers
+
+https://www.khronos.org/registry/EGL/sdk/docs/man/html/eglIntro.xhtml

@@ -1,0 +1,9 @@
+EGLDisplay eglGetDisplay(EGLNativeDisplayType display_id);
+
+通过调用 eglGetDisplay 函数来获取显示器。
+
+`display_id` 的类型和格式与实现相关，它描述了特定的 EGL 所运行系统提供的显示器。
+例如，
+
+通过调用 elgInitialize 函数，EGL 可以在一个指定的显示器上初始化。
+
