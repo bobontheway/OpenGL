@@ -7,3 +7,6 @@ EGLDisplay eglGetDisplay(EGLNativeDisplayType display_id);
 
 通过调用 elgInitialize 函数，EGL 可以在一个指定的显示器上初始化。
 
+什么是显示器？
+大多数的 EGL 函数调用包括一个 EGLDisplay 参数。
+

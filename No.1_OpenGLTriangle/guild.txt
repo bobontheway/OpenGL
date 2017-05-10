@@ -2,3 +2,215 @@ EGL Guild:
 http://stackoverflow.com/questions/19212145/egl-guide-for-beginers
 
 https://www.khronos.org/registry/EGL/sdk/docs/man/html/eglIntro.xhtml
+
+
+void glClearColor(GLfloat red,
+ 	GLfloat green,
+ 	GLfloat blue,
+ 	GLfloat alpha);
+
+指定为颜色缓冲区设置的值。
+
+为颜色缓冲区预设值。当调用 glClear 清除颜色缓冲区时，
+
+当颜色缓冲区清除的时候，指定 Red、Green、Blue 和 Alpha 通道值。初始化状态所有通道的值为 0；
+
+====================================
+
+void glClear(GLbitfield mask);
+
+将颜色缓冲区清除为预设的值；
+
+`mask` - 用来标识需要被清除的缓冲区。可以是如下三个缓冲区的组合：
+GL_COLOR_BUFFER_BIT、GL_DEPTH_BUFFER_BIT 和 GL_STENCIL_BUFFER_BIT；
+
+描述：
+glClear 设置窗口位平面区域的值为 —— 前面通过 glClearColor、glClearDepthf 和 glClearStencil
+预设的值，可以同时对多个颜色缓冲区进行清除。
+
+包含一个参数，它可以是下面值的组合，用来表示那个缓冲区将被清除：
+
+GL_COLOR_BUFFER_BIT - 
+
+如果缓冲区不存在，则针对该缓冲区的 glClear 不起作用。
+
+====================================
+
+GLuint glCreateShader(GLenum shaderType);
+
+创建一个着色器对象。着色器对象用来维护源代码字符串，定义为着色器。
+
+`shaderType` - 指定创建的着色器对象的类型。可以是：
+支持三种不同类型的着色器：
+GL_VERTEX_SHADER, GL_FRAGMENT_SHADER, or GL_COMPUTE_SHADER；
+
+GL_VERTEX_SHADER —— 着色器，用于运行在可编程的顶点处理器；
+GL_FRAGMENT_SHADER —— 着色器，用于运行在可编程的片段处理器；
+GL_COMPUTE_SHADER —— 着色器，用于运行在可编程的运算处理器；
+
+GL_COMPUTE_SHADER 在 GL 3.1 或之上的版本才支持；
+
+创建着色器对象发生错误时，返回 0；
+
+====================================
+
+void glShaderSource(GLuint shader,
+ 	GLsizei count,
+ 	const GLchar **string,
+ 	const GLint *length);
+
+
+替换着色器对象对应的源代码。
+
+- shader：指定着色器对象的句柄，它的源代码将被替换；
+- count：指定 `string` 和 `length` 数组中元素个数；
+- string：指定一个指针数组，指针指向字符串，字符串包含需要被加载到着色
+器中的源代码；
+- length：指定字符串长度的数组；（指定一个数组，数组中每个元素对应字符串的长度）
+
+源代码字符串在这时候不会扫描或解析，它们只是简单的拷贝到着色器对象。
+
+描述
+
+glShaderSource 将着色器 `shader` 的源代码为 `string` 指定的字符串数组。
+任何之前存储到着色器对象的源代码被替换掉。数组中的字符串个数通过 `count` 来指定。
+如果 `length` 是 NULL，每个字符串被认为是以 null 结尾。如果 `length` 是一个指定
+的值而不是 null，它指向一个数组，数组中的每个元素是一个字符串长度，字符串对应到
+`string`。`length`数组中的每个元素包含对应字符串的长度（null 字符不包含在字符串
+的长度中），如果字符串的长度小于 0，则表示该字符串以 null 结尾。
+
+
+注意：当 glShaderSource 函数被调用的时候，GL 拷贝着色器源代码字符串，所以在该函数返回后，
+应用程序可以立即释放他的源代码字符串拷贝。
+
+====================================
+
+void glCompileShader(GLuint shader);
+
+编译着色器对象。
+
+`shader` - 指定需要被编译的着色器对象；
+
+[描述]
+编译源代码字符串，字符串存放在由 `shader` 指定的着色器对象中。
+
+编译状态的存放作为着色器对象状态的一部分。如果着色器编译过程中没有出现错误，该值
+将设置为 GL_TRUE，否则将设置为 GL_FALSE。可以通过传递 GL_COMPILE_STATUS 参数调
+用 glGetShaderiv 来查询状态值。
+
+对着色器的编译可能会由于多种原因导致失败，这在 OpenGL ES Shading Language 规范
+中指定。不管编译是否成功，通过调用 glGetShaderInfoLog 函数可以获取关于着色器对象
+关于编译时候的日志信息。
+
+====================================
+
+void glGetShaderiv(GLuint shader,
+ 	GLenum pname,
+ 	GLint *params);
+
+从着色器对象返回一个参数。
+
+- shader：指定需要被查询的着色器对象；
+- pname：指定对象参数。下面是可以接受的符号名：GL_SHADER_TYPE, GL_DELETE_STATUS, 
+GL_COMPILE_STATUS, GL_INFO_LOG_LENGTH, GL_SHADER_SOURCE_LENGTH.
+
+- params：返回请求对象的参数（用来接收值）；
+
+描述
+
+params - 在 params 中，返回指定着色器对象参数的值，定义了下面的这些参数：
+
+GL_SHADER_TYPE，着色器的类型。如果 `shader` 是顶点着色器对象，返回 GL_VERTEX_SHADER；如果
+`shader` 是片段着色器对象，返回 GL_FRAGMENT_SHADER；
+
+GL_DELETE_STATUS，如果 `shader` 当前标记为删除，返回 GL_TRUE，否则返回 GL_FALSE；
+GL_COMPILE_STATUS，如果在 `shader` 上最后一次编译操作执行成功，params 返回 GL_TRUE，否则返回 GL_FALSE；
+GL_INFO_LOG_LENGTH，params 返回 `shader` 中信息日志的字符数目，包括 null 结尾的字符（例如，用来存放信息
+日志的字符缓冲区的大小）。如果 `shader` 没有信息日志，返回 0；
+
+GL_SHADER_SOURCE_LENGTH，返回原字符串串联的长度，组成着色器 `shader` 的源代码，包括以 null 结尾的字符。
+如果不存在源代码，返回 0。
+
+注意：如果产生错误，将不会对 `params` 参数进行修改。
+
+====================================
+
+void glGetShaderInfoLog(GLuint shader,
+ 	GLsizei maxLength,
+ 	GLsizei *length,
+ 	GLchar *infoLog);
+
+返回着色器对象的信息日志。
+
+`shader` - 指定着色器对象，将要查询它的信息日志；
+`maxLength` - 指定字符缓冲区的大小，用来存放返回的信息日志；
+`length` - 存放返回到 `infoLog` 中的字符串长度；
+`infoLog` - 指定一个字符数组，用来存放返回的信息日志；
+
+[描述]
+glGetShaderInfoLog 返回指定着色器对象的信息日志。当着色器编译时，着色器对象的信息日志被修改。
+返回的字符串将以 null 结尾。
+
+glGetShaderInfoLog 在 `infoLog` 中尽量多的返回信息日志，直到最多达到 `maxLength` 个字符。
+实际返回的字符数目在 `length` 中指定，不包括 null 结尾字符。如果不需要返回字符串的长度，可以
+传递 NULL 给 `length` 参数。要求用来存放返回日志信息的缓冲区大小可以通过调用 glGetShaderiv
+的同时传递 GL_INFO_LOG_LENGTH 来获取。
+
+着色器对象的信息日志是字符串，它们可能包含诊断信息，警告信息和其它关于最后一个编译的信息。当
+创建着色器对象时，它的信息日志的字符串长度将置为 0；
+
+注意
+着色器对象的信息日志，OpenGL 实现者主要用来传递关于编译过程的信息。因此，信息日志在开发过程中，
+对应应用开发人员来说非常有用，即使已经成功编译。应用程序开发人员不应该期望不同的 OpenGL 实现
+生成相同的日志信息。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

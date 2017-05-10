@@ -269,9 +269,15 @@ bool setupGraphics(int w, int h)
 
 void renderFrame(void)
 {
+	// 为颜色缓冲区指定预设的值。类似的函数还包括 glClearDepthf 和
+	// glClearStencil，分别用来指定深度缓冲区和模板缓冲区的预设值。
+	// 初始状态所有通道（Red, Green, Blue, Alpha）默认值为 0。
 	glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
 	checkGLError("glClearColor");
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	// 使用前面预设的值来清楚缓冲区。可以是下面三个缓冲区的组合：
+	// GL_COLOR_BUFFER_BIT、GL_DEPTH_BUFFER_BIT 和 GL_STENCIL_BUFFER_BIT。
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	checkGLError("glClear");
 
 	glUseProgram(gProgram);
